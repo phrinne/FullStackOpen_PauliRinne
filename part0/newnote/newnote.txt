@@ -1,0 +1,29 @@
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+
+note over server:
+Server receives the HTTP POST request and saves the note from its body
+end note
+
+server-->browser: HTTP status code 302 (URL redirect to reload)
+
+note over browser:
+Notes page loaded again below as with the diagram in the courser material
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+server-->browser: HTML-code
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser: main.css
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+server-->browser: main.js
+
+note over browser:
+js-code and JSON request as in the course material
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server-->browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+
+note over browser:
+notes list rendering event handler executed in browser as in the course material example
+end note
