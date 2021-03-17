@@ -1,0 +1,13 @@
+note over browser:
+JS adds note to local list (and renders the list)
+before sending new note to server
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over server:
+HTTP POST request contains the user input and time stamp as JSON
+Server saves the new note
+end note
+
+server-->browser: status code 201 created
