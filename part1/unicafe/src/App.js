@@ -26,10 +26,16 @@ export default App;*/
 
 import React, { useState } from 'react'
 
-const Button = (props) => (
-  <button onClick={props.handleClick}>
-    {props.text}
+const Button = ({handleClick, text}) => (
+  <button onClick={handleClick}>
+    {text}
   </button>
+)
+
+const Statistic = ({text, value}) => (
+  <>
+  {text} {value} <br />
+  </>
 )
 
 const Statistics = ({good, neutral, bad}) => {
@@ -45,12 +51,12 @@ const Statistics = ({good, neutral, bad}) => {
       <>
       <h1>statistics</h1>
       <p>
-        good {good}<br />
-        neutral {neutral}<br />
-        bad {bad}<br />
-        all {good+neutral+bad}<br />
-        average {(good-bad)/(good+neutral+bad)}<br />
-        positive {100 * (good)/(good+neutral+bad)} %<br />
+        <Statistic text="good" value={good} />
+        <Statistic text="neutral" value={neutral} />
+        <Statistic text="bad" value={bad} />
+        <Statistic text="all" value={good+neutral+bad} />
+        <Statistic text="average" value={(good-bad)/(good+neutral+bad)} />
+        <Statistic text="positive" value={(100 * (good)/(good+neutral+bad)) + ' %'} />
       </p>
       </>
     )
