@@ -45,9 +45,14 @@ const App = () => {
       <Button handleClick={() => setNeutral(neutral+1)} text="neutral" />
       <Button handleClick={() => setBad(bad+1)} text="bad" />
       <h1>statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
+      <p>
+        good {good}<br />
+        neutral {neutral}<br />
+        bad {bad}<br />
+        all {good+neutral+bad}<br />
+        average {(good-bad)/(good+neutral+bad)}<br />
+        positive {100 * (good)/(good+neutral+bad)} %<br />
+      </p>
     </div>
   )
 }
