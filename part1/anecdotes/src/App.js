@@ -50,14 +50,30 @@ const App = () => {
     setPoints(newPoints)
   }
 
+  const getMostVoted = () => {
+    let mostVoted = 0;
+    for(let i = 1; i < points.length; i++) {
+      if(points[i] > points[mostVoted]) {
+        mostVoted = i;
+      }
+    }
+    return mostVoted;
+  }
+
   return (
     <>
+    <h1>Anecdote of the day</h1>
     <div>
       {anecdotes[selected]}<br />
       has {points[selected]} votes
     </div>
     <button onClick={handleVote}>vote</button>
     <button onClick={handleNext}>next anecdote</button>
+    <h1>Anecdote with most votes</h1>
+    <div>
+      {anecdotes[getMostVoted()]}<br />
+      has {points[getMostVoted()]} votes
+    </div>
     </>
   )
 }
