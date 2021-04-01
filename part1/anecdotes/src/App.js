@@ -35,20 +35,29 @@ const App = () => {
     'Premature optimization is the root of all evil.',
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
   ]
-   
-  const [selected, setSelected] = useState(0)
 
-  const handleClick = () => {
+  const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(new Array(anecdotes.length).fill(0))//useState([0, 0, 0, 0, 0, 0])
+
+  const handleNext = () => {
     const randomIndex = Math.floor(Math.random() * anecdotes.length)
-    setSelected(randomIndex);
+    setSelected(randomIndex)
+  }
+
+  const handleVote = () => {
+    const newPoints = [...points]
+    newPoints[selected] += 1
+    setPoints(newPoints)
   }
 
   return (
     <>
     <div>
-      {anecdotes[selected]}
+      {anecdotes[selected]}<br />
+      has {points[selected]} votes
     </div>
-    <button onClick={handleClick}>next anecdote</button>
+    <button onClick={handleVote}>vote</button>
+    <button onClick={handleNext}>next anecdote</button>
     </>
   )
 }
