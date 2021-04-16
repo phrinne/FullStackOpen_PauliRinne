@@ -16,13 +16,19 @@ const CountryInfo = ({country}) => {
   )
 }
 
-const CountriesInfo = ({countries}) => {
+const CountryListItem = ({country, setSearchText}) => (
+  <div>
+    {country.name} <button onClick={() => setSearchText(country.name)}>show</button>
+  </div>
+)
+
+const CountriesInfo = ({countries, setSearchText}) => {
   if(countries.length > 10) {
     return (<div>Too many matches, specify another filter</div>)
   } else if (countries.length === 1) {
     return (<CountryInfo country={countries[0]} />)
   } else {
-    return (countries.map(country => <div key={country.name}>{country.name}</div>))
+    return (countries.map(country => <CountryListItem country={country} setSearchText={setSearchText} key={country.name} />))
   }
 }
 
@@ -45,7 +51,7 @@ const App = () => {
   return (
     <div>
       find countries <input value={searchText} onChange={handleSearchTextChange} />
-      <CountriesInfo countries={searchedCountries} />
+      <CountriesInfo countries={searchedCountries} setSearchText={setSearchText} />
     </div>
   )
 }
