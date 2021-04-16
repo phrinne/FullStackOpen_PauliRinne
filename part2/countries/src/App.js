@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const Weather = ({weather}) => { 
-  if(weather === null) {
-    return (<div>loading...</div>)
-  } else {
+const Weather = ({city}) => { 
+  const [ weather, setWeather ] = useState(null)
+  const api_key = process.env.REACT_APP_API_KEY
+  const weatherUrl = `http://api.weatherstack.com/current?access_key=${api_key}&query=${city}`
+
+  useEffect(() => {
+    axios
+      .get(weatherUrl)
+      .then(response => setWeather(response.data))
+  }, [weatherUrl])
+  
+  if(weather !== null) {
     return (
       <>
         <div><strong>Temperature: </strong>{weather.current.temperature} Celsius</div>
@@ -13,20 +21,10 @@ const Weather = ({weather}) => {
       </>
     )
   }
+  return (<></>)
 }
 
-const CountryInfo = ({country}) => {
-  const [ weather, setWeather ] = useState(null)
-  const api_key = process.env.REACT_APP_API_KEY
-  const weatherUrl = `http://api.weatherstack.com/current?access_key=${api_key}&query=${country.capital}`
-
-  useEffect(() => {
-    axios
-      .get(weatherUrl)
-      .then(response => setWeather(response.data))
-  }, [weatherUrl])
-
-  return (
+const CountryInfo = ({country}) => (
     <>
       <h1>{country.name}</h1>
       <div>{`capital ${country.capital}`}</div>
@@ -37,10 +35,9 @@ const CountryInfo = ({country}) => {
       </ul>
       <img src={country.flag} width={200} alt={`flag of ${country.name}`} />
       <h2>{`Weather in ${country.capital}`}</h2>
-      <Weather weather={weather} />
+      <Weather city={country.capital} />
     </>
-  )
-}
+)
 
 const CountryListItem = ({country, setSearchText}) => (
   <div>
