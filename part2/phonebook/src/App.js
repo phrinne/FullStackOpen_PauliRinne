@@ -12,6 +12,13 @@ const App = () => {
 
   const addPerson = (e) => {
     e.preventDefault()
+
+    const alreadyExists = persons.map(person => person.name).indexOf(newName) !== -1
+    if(alreadyExists) {
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
+
     const person = { name: newName }
     setPersons(persons.concat(person))
     setNewName('')
