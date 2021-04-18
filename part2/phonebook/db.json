@@ -32,8 +32,23 @@
     },
     {
       "name": "arto bryggis",
-      "number": "54321",
+      "number": "666",
       "id": 8
+    },
+    {
+      "name": "Super Man",
+      "number": "1234143",
+      "id": 11
+    },
+    {
+      "name": "Bat Man",
+      "number": "123132",
+      "id": 12
+    },
+    {
+      "name": "Mega Man",
+      "number": "123132",
+      "id": 13
     }
   ]
 }

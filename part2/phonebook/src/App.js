@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import dbService from './services/persons'
 
+const Notification = ({message, isError}) => {
+  if (message === null) {
+    return null
+  } else {
+    const className = isError?'error':'notification'
+    return (
+      <div className={className}>
+        {message}
+      </div>
+    )
+  }
+}
+
 const Filter = ({filterText, handleFilterChange}) => (
   <div>
     filter shown with: <input value={filterText} onChange={handleFilterChange} />
@@ -36,6 +49,8 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filterText, setFilterText ] = useState('')
+  const [ successMessage, setSuccessMessage ] = useState(null)
+  const [ errorMessage, setErrorMessage ] = useState(null)
 
   useEffect(() => {
     dbService.getAll().then(initialPersons => setPersons(initialPersons))
@@ -58,6 +73,9 @@ const App = () => {
       setPersons(persons.concat(returnedPerson))
       clearInputs()
     })
+
+    setSuccessMessage(`Added ${newPerson.name}`) 
+    setTimeout(() => setSuccessMessage(null), 3000)
   }
 
   const deletePerson = (personToDelete) => {
@@ -69,9 +87,17 @@ const App = () => {
 
   const updateNumberOf = (person, newNumber) => {
     dbService.update(person.id, { name: person.name, number: newNumber })
-    .then(returnedPerson => {
-      setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
-    })
+      .then(returnedPerson => {
+        setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
+        setSuccessMessage(`Updated number of ${returnedPerson.name}`) 
+        setTimeout(() => setSuccessMessage(null), 3000)
+      })
+      .catch(error => {
+        setErrorMessage(`Information of ${person.name}' was already removed from server`)
+        setTimeout(() => setErrorMessage(null), 3000)
+        setPersons(persons.filter(p => p.id !== person.id))
+      })
+
     clearInputs()
   }
 
@@ -97,6 +123,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} isError={false} />
+      <Notification message={errorMessage} isError={true} />
       <Filter filterText={filterText} handleFilterChange={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm 
