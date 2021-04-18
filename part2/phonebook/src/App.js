@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import dbService from './services/persons'
 
 const Filter = ({filterText, handleFilterChange}) => (
   <div>
@@ -36,12 +36,9 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filterText, setFilterText ] = useState('')
-  const dbUrl = 'http://localhost:3001/persons'
 
   useEffect(() => {
-    axios
-      .get(dbUrl)
-      .then(response => setPersons(response.data))
+    dbService.getAll().then(initialPersons => setPersons(initialPersons))
   }, [])
 
   const addPerson = (e) => {
@@ -54,13 +51,11 @@ const App = () => {
     }
 
     const person = { name: newName, number: newNumber }
-    axios
-    .post(dbUrl, person)
-    .then(response => {
-      setPersons(persons.concat(response.data))
+    dbService.create(person)
+    .then(returnedPerson => {
+      setPersons(persons.concat(returnedPerson))
       setNewName('')
       setNewNumber('')
-      console.log(response.data);
     })
   }
 
