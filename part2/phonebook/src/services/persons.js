@@ -5,7 +5,9 @@ const getAll = () => axios.get(dbUrl).then(response => response.data)
 
 const create = (newObject) => axios.post(dbUrl, newObject).then(response => response.data)
 
-const outbound = { getAll, create }
+const remove = (id) => axios.delete(`${dbUrl}/${id}`)
+
+const outbound = { getAll, create, remove }
 
 export default outbound
 

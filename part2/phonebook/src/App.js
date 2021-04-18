@@ -21,13 +21,13 @@ const PersonForm = ({onSubmit, newName, newNumber, handleNameChange, handleNumbe
   </form>
 )
 
-const Person = ({person}) => (
-  <div>{person.name} {person.number}</div>
+const Person = ({person, deletePerson}) => (
+  <div>{person.name} {person.number} <button onClick={deletePerson}>delete</button></div>
 )
 
-const Persons = ({persons}) => (
+const Persons = ({persons, deletePerson}) => (
   <div>
-    {persons.map(person => <Person person={person} key={person.name}/>)}
+    {persons.map(person => <Person person={person} key={person.id} deletePerson={() => deletePerson(person)} />)}
   </div>
 )
 
@@ -59,6 +59,13 @@ const App = () => {
     })
   }
 
+  const deletePerson = (personToDelete) => {
+    if(window.confirm(`Delete ${personToDelete.name}?`)) {
+      dbService.remove(personToDelete.id)//.then(response => console.log(response))
+      setPersons(persons.filter(person => person.id !== personToDelete.id))
+    }
+  }
+
   const handleNameChange = (e) => {
     setNewName(e.target.value)
   }
@@ -86,7 +93,7 @@ const App = () => {
         handleNumberChange={handleNumberChange} 
       />
       <h3>Numbers</h3>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} deletePerson={deletePerson} />
     </div>
   )
 }
