@@ -7,9 +7,8 @@ const create = (newObject) => axios.post(dbUrl, newObject).then(response => resp
 
 const remove = (id) => axios.delete(`${dbUrl}/${id}`)
 
-const outbound = { getAll, create, remove }
+const update = (id, newObject) => axios.put(`${dbUrl}/${id}`, newObject).then(response => response.data)
+
+const outbound = { getAll, create, remove, update }
 
 export default outbound
-
-//const update = (id, newObject) => axios.put(`${dbUrl}/${id}`, newObject)
-//export default { getAll, create/*, update*/ }

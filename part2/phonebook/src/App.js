@@ -46,16 +46,17 @@ const App = () => {
 
     const alreadyExists = persons.map(person => person.name).indexOf(newName) !== -1
     if(alreadyExists) {
-      alert(`${newName} is already added to phonebook`)
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with the new one?`)) {
+        updateNumberOf(persons.find(person => person.name === newName), newNumber)
+      }
       return
     }
 
-    const person = { name: newName, number: newNumber }
-    dbService.create(person)
+    const newPerson = { name: newName, number: newNumber }
+    dbService.create(newPerson)
     .then(returnedPerson => {
       setPersons(persons.concat(returnedPerson))
-      setNewName('')
-      setNewNumber('')
+      clearInputs()
     })
   }
 
@@ -64,6 +65,14 @@ const App = () => {
       dbService.remove(personToDelete.id)//.then(response => console.log(response))
       setPersons(persons.filter(person => person.id !== personToDelete.id))
     }
+  }
+
+  const updateNumberOf = (person, newNumber) => {
+    dbService.update(person.id, { name: person.name, number: newNumber })
+    .then(returnedPerson => {
+      setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
+    })
+    clearInputs()
   }
 
   const handleNameChange = (e) => {
@@ -76,6 +85,11 @@ const App = () => {
 
   const handleFilterChange = (e) => {
     setFilterText(e.target.value)
+  }
+
+  const clearInputs = () => {
+    setNewName('')
+    setNewNumber('')
   }
 
   const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(filterText.toLowerCase()));
