@@ -19,3 +19,13 @@ Content-Type: application/json
     "url": "http://www.google.com",
     "likes": 777
 }
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Blog title 4",
+    "author": "Barack Blogama",
+    "url": "http://www.google.com",
+    "likes": 15
+}
