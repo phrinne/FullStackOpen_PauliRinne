@@ -15,7 +15,12 @@ beforeEach(async () => {
 
 test('blogs are returned as json', async () => {
   const response = await api.get('/api/blogs').expect(200).expect('Content-Type', /application\/json/)
-  expect(response.body).toHaveLength(2)
+  expect(response.body).toHaveLength(helper.initialBlogs.length)
+})
+
+test('unique identifier property of the blog posts is named id', async () => {
+  const response = await api.get('/api/blogs')
+  response.body.forEach( (b) => expect(b.id).toBeDefined() )
 })
 
 afterAll(() => {
