@@ -58,6 +58,31 @@ test('likes will default to 0', async () => {
   expect(noLikesBlog.likes).toBe(0)
 })
 
+test('title and url missing will respond with 400', async () => {
+  const badBlogs = [
+    {
+      title: 'Bad 1',
+      author: 'Crappy Blogger',
+      likes: 0
+    },
+    {
+      author: 'Crappy Blogger',
+      url: 'http://www.google.com',
+      likes: 0
+    },
+    {
+      author: 'Crappy Blogger',
+      likes: 0
+    }
+  ]
+
+  for(let b of badBlogs) {
+    await api.post('/api/blogs').send(b).expect(400)
+    const response = await api.get('/api/blogs')
+    expect(response.body).toHaveLength(helper.initialBlogs.length)
+  }
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
