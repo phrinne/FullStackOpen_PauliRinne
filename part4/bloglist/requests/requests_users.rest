@@ -1,0 +1,20 @@
+GET http://localhost:3003/api/users
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "blogs": [],
+    "username": "ro",
+    "name": "Superuser",
+    "password": "salainen"
+}
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "blogs": [],
+    "name": "Pauli Rinne",
+    "password": "salainen"
+}
