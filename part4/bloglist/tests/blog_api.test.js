@@ -1,16 +1,30 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const bcrypt = require('bcrypt')
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
 const app = require('../app')
+const User = require('../models/user')
 const api = supertest(app)
 
+let token = null
+
 beforeEach(async () => {
+  await User.deleteMany({})
+  const passwordHash = await bcrypt.hash('sekretz', 10)
+  const user = new User({
+    username: 'testuser',
+    name: 'James James',
+    passwordHash,
+  })
+  const savedUser = await user.save()
+  const login = { 'username': user.username, 'password': 'sekretz' }
+  const loginResponse = await api.post('/api/login').send(login)
+  token = loginResponse.body.token
+
   await Blog.deleteMany({})
+  helper.initialBlogs.forEach(b => b.user = savedUser.id)
   await Blog.insertMany(helper.initialBlogs)
-  /*const blogObjects = helper.initialBlogs.map(b => new Blog(b))
-  const promiseArray = blogObjects.map(b => b.save())
-  await Promise.all(promiseArray)*/
 })
 
 describe('when there is initially some blogs saved', () => {
@@ -26,7 +40,7 @@ describe('when there is initially some blogs saved', () => {
 })
 
 describe('addition of a new blog', () => {
-  test('succeeds with valid data', async () => {
+  test('fails without token', async () => {
     const newBlog = {
       title: 'Blog epicness X',
       author: 'Arnold Blogzenegger',
@@ -35,6 +49,25 @@ describe('addition of a new blog', () => {
     }
 
     await api.post('/api/blogs').send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    expect(response.body).toHaveLength(helper.initialBlogs.length)
+  })
+
+  test('succeeds with valid data', async () => {
+    const newBlog = {
+      title: 'Blog epicness X',
+      author: 'Arnold Blogzenegger',
+      url: 'http://www.google.com',
+      likes: 777
+    }
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
+      .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -44,14 +77,17 @@ describe('addition of a new blog', () => {
     expect(titles).toContain(newBlog.title)
   })
 
-  test('will default likes to 0 when missin', async () => {
+  test('will default likes to 0 when likes is missing', async () => {
     const newBlog = {
       title: 'No likes',
       author: 'Mr. Sad',
       url: 'http://www.google.com'
     }
 
-    await api.post('/api/blogs').send(newBlog)
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
+      .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -80,7 +116,11 @@ describe('addition of a new blog', () => {
     ]
 
     for (let b of badBlogs) {
-      await api.post('/api/blogs').send(b).expect(400)
+      await api
+        .post('/api/blogs')
+        .set('Authorization', `bearer ${token}`)
+        .send(b)
+        .expect(400)
       const response = await api.get('/api/blogs')
       expect(response.body).toHaveLength(helper.initialBlogs.length)
     }
@@ -92,7 +132,10 @@ describe('deletion of a blog', () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `bearer ${token}`)
+      .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
 
