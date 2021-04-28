@@ -2,10 +2,10 @@ GET http://localhost:3003/api/blogs
 ###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYwODg0YmQxY2ViMzE0NzNkNjcyZDFjYSIsImlhdCI6MTYxOTU5OTY2M30.A_6v81_BSl8RDk08e_6e6UGTTN323E8RO2SCsNwS_Zs
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYwODg0YmQxY2ViMzE0NzNkNjcyZDFjYSIsImlhdCI6MTYxOTYwMDUzNX0.1916eplWtQZxy2dQuhr3q5cRfRHbRUjuarU9joU0b7w
 
 {
-    "title": "This is a blog title",
+    "title": "This is a blog title X",
     "author": "James Author",
     "url": "http://www.google.com",
     "likes": 666
