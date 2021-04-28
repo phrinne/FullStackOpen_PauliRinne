@@ -18,3 +18,13 @@ Content-Type: application/json
     "name": "Pauli Rinne",
     "password": "salainen"
 }
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "blogs": [],
+    "username": "newman",
+    "name": "Uusi Mies",
+    "password": "salainen"
+}
