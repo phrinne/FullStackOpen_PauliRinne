@@ -101,7 +101,7 @@ const App = () => {
     )
   }
 
-  const blogsToShow = blogs.filter(b => b.user.username === user.username)
+  const blogsToShow = blogs.filter(b => b.user.username === user.username).sort((a, b) => b.likes - a.likes)
 
   return (
     <div>
