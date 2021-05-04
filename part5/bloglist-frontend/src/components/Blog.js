@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({blog}) => {
+const Blog = ({blog, handleLike}) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const blogStyle = {
@@ -11,16 +11,32 @@ const Blog = ({blog}) => {
     marginBottom: 5
   }
 
-  const details = () => (
+  const addLike = () => {
+    handleLike(blog.id, {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes+1,
+      user: blog.user
+    })
+  }
+
+  const details = () => {
+    return (
     <>
-    <div>{blog.url}</div>
-    <div>
-      likes {blog.likes}
-      <button>like</button>
+      <div>
+        {blog.url}
       </div>
-    <div>{blog.user.name}</div>
+      <div>
+        likes {blog.likes}
+        <button onClick={addLike}>like</button>
+        </div>
+      <div>
+        {blog.user.name}
+      </div>
     </>
-  )
+    )
+  }
 
   return (
     <div style={blogStyle}>

@@ -61,6 +61,16 @@ const App = () => {
     }
   }
 
+  const addLike = async (id, likedBlog) => {
+    try {
+      const returnedBlog = await blogService.update(id, likedBlog)
+      setBlogs(blogs.map(b => b.id === id ? returnedBlog:b))
+      setNotification(false, `Blog ${returnedBlog.title} liked`)
+    } catch (exception) {
+      setNotification(true, 'Blog like failed')
+    }
+  }
+
   const setNotification = (isError, message) => {
     if(isError) {
       setErrorMessage(message)
@@ -110,7 +120,7 @@ const App = () => {
       </Togglable>
       <br />
 
-      {blogsToShow.map(b => <Blog key={b.id} blog={b} />)}
+      {blogsToShow.map(b => <Blog key={b.id} blog={b} handleLike={addLike} />)}
     </div>
   )
 }
