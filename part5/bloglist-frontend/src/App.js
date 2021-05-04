@@ -88,7 +88,7 @@ const App = () => {
       setErrorMessage(message)
       setTimeout(() => setErrorMessage(null), 3000)
     } else {
-      setSuccessMessage(message) 
+      setSuccessMessage(message)
       setTimeout(() => setSuccessMessage(null), 3000)
     }
   }
