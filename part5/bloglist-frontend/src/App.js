@@ -71,6 +71,18 @@ const App = () => {
     }
   }
 
+  const removeBlog = async (blogToDelete) => {
+    if(window.confirm(`Remove blog ${blogToDelete.title} by ${blogToDelete.author}?`)) {
+      try {
+        const response = await blogService.remove(blogToDelete.id)
+        console.log(response)
+        setBlogs(blogs.filter(b => b.id !== blogToDelete.id))
+      } catch (exception) {
+        setNotification(true, 'Blog remove failed')
+      }
+    }
+  }
+
   const setNotification = (isError, message) => {
     if(isError) {
       setErrorMessage(message)
@@ -120,7 +132,7 @@ const App = () => {
       </Togglable>
       <br />
 
-      {blogsToShow.map(b => <Blog key={b.id} blog={b} handleLike={addLike} />)}
+      {blogsToShow.map(b => <Blog key={b.id} blog={b} handleLike={addLike} handleDelete={removeBlog} />)}
     </div>
   )
 }
