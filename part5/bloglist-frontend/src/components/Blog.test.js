@@ -27,10 +27,12 @@ describe('<Blog />', () => {
     user: 123456
   }
   let component
+  const mockHandlerLikes = jest.fn()
+  const mockHandlerDelete = jest.fn()
 
   beforeEach(() => {
     component = render(
-      <Blog blog={blog} handleLike={null} handleDelete={null} />
+      <Blog blog={blog} handleLike={mockHandlerLikes} handleDelete={mockHandlerDelete} />
     )
   })
 
@@ -61,6 +63,17 @@ describe('<Blog />', () => {
     expect(component.container).toHaveTextContent(
       '666'
     )
+  })
+
+  test('calls event handler twice after clicking like twice', () => {
+    const button_view = component.getByText('view')
+    fireEvent.click(button_view)
+
+    const button_like = component.getByText('like')
+    fireEvent.click(button_like)
+    fireEvent.click(button_like)
+
+    expect(mockHandlerLikes.mock.calls).toHaveLength(2)
   })
 
   /*test('after clicking the button, children are displayed', () => {
