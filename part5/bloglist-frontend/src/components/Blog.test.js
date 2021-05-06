@@ -3,21 +3,6 @@ import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 
-/*test('renders content', () => {
-  const blog = {
-    content: 'Component testing is done with react-testing-library',
-    important: true
-  }
-
-  const component = render(
-    <Note note={note} />
-  )
-
-  expect(component.container).toHaveTextContent(
-    'Component testing is done with react-testing-library'
-  )
-})*/
-
 describe('<Blog />', () => {
   const blog = {
     title: 'Test title',
@@ -75,13 +60,4 @@ describe('<Blog />', () => {
 
     expect(mockHandlerLikes.mock.calls).toHaveLength(2)
   })
-
-  /*test('after clicking the button, children are displayed', () => {
-    const button = component.getByText('show...')
-    fireEvent.click(button)
-
-    const div = component.container.querySelector('.togglableContent')
-    expect(div).not.toHaveStyle('display: none')
-  })*/
-
 })
