@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render/*, fireEvent*/ } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 
 /*test('renders content', () => {
@@ -43,17 +43,22 @@ describe('<Blog />', () => {
     )
   })
 
-  test('at start the url and likes are not rendered', () => {
-    /*const div1 = component.container.querySelector('.blogUrl')
-    expect(div1).toBe(null)
-    const div2 = component.container.querySelector('.blogLikes')
-    expect(div2).toBe(null)*/
-    /*const button = component.getByText('view')
-    fireEvent.click(button)*/
+  test('does not render the url and likes by default', () => {
     expect(component.container).not.toHaveTextContent(
       'www.blogtest.com'
     )
     expect(component.container).not.toHaveTextContent(
+      '666'
+    )
+  })
+
+  test('renders likes and url after clicking view', () => {
+    const button = component.getByText('view')
+    fireEvent.click(button)
+    expect(component.container).toHaveTextContent(
+      'www.blogtest.com'
+    )
+    expect(component.container).toHaveTextContent(
       '666'
     )
   })
