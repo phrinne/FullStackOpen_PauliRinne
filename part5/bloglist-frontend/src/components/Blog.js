@@ -46,7 +46,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div className='blogitem' style={blogStyle}>
       {blog.title} {blog.author}
       <button onClick={() => setIsExpanded(!isExpanded)}>{isExpanded?'hide':'view'}</button>
       {isExpanded && details()}

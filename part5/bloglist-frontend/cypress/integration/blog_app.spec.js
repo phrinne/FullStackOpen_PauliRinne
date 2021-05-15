@@ -1,13 +1,3 @@
-/*describe('Blog app', function() {
-  beforeEach(function() {
-    cy.request('POST', 'http://localhost:3003/api/testing/reset')
-    cy.visit('http://localhost:3000')
-  })
-
-  it('Login form is shown', function() {
-    cy.contains('Log in to application')
-  })
-})*/
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
@@ -64,18 +54,42 @@ describe('Blog app', function() {
         cy.createBlog({ title: 'Third blog', author: 'Third Man', url: 'https://www.altavista.com' })
       })
 
-      it.only('one of those can be liked', function () {
+      it('one of those can be liked', function () {
         cy.contains('Second blog').contains('view').click()
         cy.contains('Second blog').contains('like').click()
 
         cy.contains('Blog Second blog liked')
       })
 
-      it.only('one of those can be deleted by the user', function () {
+      it('one of those can be deleted by the user', function () {
         cy.contains('Second blog').contains('view').click()
         cy.contains('Second blog').contains('remove').click()
 
         cy.contains('Second blog').should('not.exist')
+      })
+
+      it('they are ordered by likes', function () {
+        cy.contains('First blog First Man').contains('view').click()
+        cy.wait(500)
+
+        cy.contains('Second blog Second Man').contains('view').click()
+        cy.wait(500)
+        cy.contains('Second blog Second Man').contains('like').click()
+        cy.wait(500)
+
+        cy.contains('Third blog Third Man').contains('view').click()
+        cy.wait(500)
+        cy.contains('Third blog Third Man').contains('like').click()
+        cy.wait(500)
+        cy.contains('Third blog Third Man').contains('like').click()
+        cy.wait(500)
+
+        cy.get('.blogLikes')
+          .then(($items) => {
+            const texts = Cypress.$.makeArray($items).map((item) => item.innerText.substring(0, 7))
+            return texts
+          })
+          .should('deep.equal', ['likes 2', 'likes 1', 'likes 0'])
       })
     })
   })
