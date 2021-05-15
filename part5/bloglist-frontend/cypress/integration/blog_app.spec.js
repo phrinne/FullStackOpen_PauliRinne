@@ -70,6 +70,13 @@ describe('Blog app', function() {
 
         cy.contains('Blog Second blog liked')
       })
+
+      it.only('one of those can be deleted by the user', function () {
+        cy.contains('Second blog').contains('view').click()
+        cy.contains('Second blog').contains('remove').click()
+
+        cy.contains('Second blog').should('not.exist')
+      })
     })
   })
 })
