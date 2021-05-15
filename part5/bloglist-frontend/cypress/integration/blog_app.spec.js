@@ -41,4 +41,20 @@ describe('Blog app', function() {
       cy.contains('login failed')
     })
   })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'cypresshill', password: 'salainen' })
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('new blog').click()
+      cy.get('#title').type('Uusi blogi Cypress')
+      cy.get('#author').type('Blogman McBlog')
+      cy.get('#url').type('https://www.altavista.com')
+      cy.get('#create-blog-button').click()
+
+      cy.contains('Uusi blogi Cypress')
+    })
+  })
 })
