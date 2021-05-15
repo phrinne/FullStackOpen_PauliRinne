@@ -56,5 +56,20 @@ describe('Blog app', function() {
 
       cy.contains('Uusi blogi Cypress')
     })
+
+    describe('and several notes exist', function () {
+      beforeEach(function () {
+        cy.createBlog({ title: 'First blog', author: 'First Man', url: 'https://www.altavista.com' })
+        cy.createBlog({ title: 'Second blog', author: 'Second Man', url: 'https://www.altavista.com' })
+        cy.createBlog({ title: 'Third blog', author: 'Third Man', url: 'https://www.altavista.com' })
+      })
+
+      it.only('one of those can be liked', function () {
+        cy.contains('Second blog').contains('view').click()
+        cy.contains('Second blog').contains('like').click()
+
+        cy.contains('Blog Second blog liked')
+      })
+    })
   })
 })
