@@ -17,27 +17,25 @@ const asObject = (anecdote) => {
   }
 }
 
-const initialState = {anecdotes: anecdotesAtStart.map(asObject), notification: null}
+const initialState = anecdotesAtStart.map(asObject)//{anecdotes: anecdotesAtStart.map(asObject), notification: null}
 
-const reducer = (state = initialState, action) => {
+const anecdoteReducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
 
   switch (action.type) {
     case 'NEW_ANECDOTE':
-      return {...state, anecdotes: [...state.anecdotes, action.data]}
+      return [...state, action.data]//{...state, anecdotes: [...state.anecdotes, action.data]}
     case 'VOTE': {
       const id = action.data.id
-      const anecdoteToVote = state.anecdotes.find(a => a.id === id)
+      const anecdoteToVote = state.find(a => a.id === id)
       const changedAnecdote = { 
         ...anecdoteToVote, 
         votes: anecdoteToVote.votes+1 
       }
-      const orderedAnecdotes = state.anecdotes.map(a => a.id !== id ? a : changedAnecdote ).sort((a, b) => b.votes - a.votes)
-      return {...state, anecdotes: orderedAnecdotes}
+      const orderedAnecdotes = state.map(a => a.id !== id ? a : changedAnecdote ).sort((a, b) => b.votes - a.votes)
+      return orderedAnecdotes
     }
-    case 'NOTIFICATION':
-      return {...state, notification: action.data.notification}
     default:
       return state
   }
@@ -61,11 +59,4 @@ export const addVote = (id) => {
   }
 }
 
-export const setNotification = (notification) => {
-  return {
-    type: 'NOTIFICATION',
-    data: { notification }
-  }
-}
-
-export default reducer
+export default anecdoteReducer
