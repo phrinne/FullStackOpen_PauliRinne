@@ -4,7 +4,6 @@ import { addVote } from '../reducers/anecdoteReducer'
 import { setNotification, removeNotification } from '../reducers/notificationReducer'
 import Notification from './Notification'
 import Filter from './Filter'
-import anecdoteService from '../services/anecdotes'
 
 const Anecdote = ({ anecdote, handleVote }) => {
   return(
@@ -24,12 +23,8 @@ const AnecdoteList = () => {
   const filter = useSelector(state => state.filter)
 
   const handleVote = async (a) => {
-    const votedAnecdote = {...a, votes: a.votes+1}
-    const votedAnecdoteFromBackend = await anecdoteService.update(a.id, votedAnecdote)
-    dispatch(addVote(votedAnecdoteFromBackend))
-    
-    dispatch(setNotification(`Voted for ${a.content}`))
-    setTimeout(() => dispatch(removeNotification()), 5000)
+    dispatch(addVote(a))
+    dispatch(setNotification(`Voted for ${a.content}`, 5))
   }
 
   const filteredAnecdotes = filter?anecdotes.filter(a => a.content.includes(filter)):anecdotes
