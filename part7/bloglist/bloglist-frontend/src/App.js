@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs, createBlog, addLike, deleteBlog } from './reducers/blogReducer'
 
 import Blog from './components/Blog'
 import Notification from './components/Notification'
@@ -10,7 +11,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector(state => state.blogs)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -20,9 +21,7 @@ const App = () => {
   const notificationTime = 3
 
   useEffect(() => {
-    blogService.getAll().then(bs => {
-      setBlogs(bs)
-    })
+    dispatch(initializeBlogs())
   }, [])
 
   useEffect(() => {
@@ -56,20 +55,18 @@ const App = () => {
 
   const addBlog = async (newBlog) => {
     try {
-      const returnedBlog = await blogService.create(newBlog)
-      setBlogs( blogs.concat(returnedBlog) )
-      dispatch(setNotification(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, false, notificationTime))
+      dispatch(createBlog(newBlog))
+      dispatch(setNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`, false, notificationTime))
       blogFormRef.current.toggleVisibility()
     } catch (exception) {
       dispatch(setNotification('Blog addition failed', true, 3))
     }
   }
 
-  const addLike = async (id, likedBlog) => {
+  const likeBlog = async (id, likedBlog) => {
     try {
-      const returnedBlog = await blogService.update(id, likedBlog)
-      setBlogs(blogs.map(b => b.id === id ? returnedBlog:b))
-      dispatch(setNotification(`Blog ${returnedBlog.title} liked`, false, notificationTime))
+      dispatch(addLike(id, likedBlog))
+      dispatch(setNotification(`Blog ${likedBlog.title} liked`, false, notificationTime))
     } catch (exception) {
       dispatch(setNotification('Blog like failed', true, notificationTime))
     }
@@ -78,9 +75,7 @@ const App = () => {
   const removeBlog = async (blogToDelete) => {
     if(window.confirm(`Remove blog ${blogToDelete.title} by ${blogToDelete.author}?`)) {
       try {
-        const response = await blogService.remove(blogToDelete.id)
-        console.log(response)
-        setBlogs(blogs.filter(b => b.id !== blogToDelete.id))
+        dispatch(deleteBlog(blogToDelete.id))
       } catch (exception) {
         dispatch(setNotification('Blog remove failed', true, notificationTime))
       }
@@ -125,7 +120,7 @@ const App = () => {
       </Togglable>
       <br />
 
-      {blogsToShow.map(b => <Blog key={b.id} blog={b} handleLike={addLike} handleDelete={removeBlog} />)}
+      {blogsToShow.map(b => <Blog key={b.id} blog={b} handleLike={likeBlog} handleDelete={removeBlog} />)}
     </div>
   )
 }
