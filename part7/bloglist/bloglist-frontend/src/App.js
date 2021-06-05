@@ -3,27 +3,37 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs, createBlog, addLike, deleteBlog } from './reducers/blogReducer'
 import { setUser, logout } from './reducers/userReducer'
+import { initializeUsers } from './reducers/usersReducer'
 
 import Notification from './components/Notification'
 import Users from './components/Users'
+import User from './components/User'
 import Blogs from './components/Blogs'
 
 import loginService from './services/login'
 
-import {
-  BrowserRouter as Router,
-  Switch, Route//, Link
-} from 'react-router-dom'
+import { Switch, Route, useRouteMatch/*, Link*/ } from 'react-router-dom'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
   const notification = useSelector(state => state.notification)
+  const users = useSelector(state => state.users)
+
   const dispatch = useDispatch()
   const blogFormRef = useRef()
+
+  const userMatch = useRouteMatch('/users/:id')
+  const userFromMatch = userMatch?users.find(u => u.id === userMatch.params.id):null
+
   const notificationTime = 3
+
+  useEffect(() => {
+    dispatch(initializeUsers())
+  }, [])
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -106,69 +116,39 @@ const App = () => {
   const blogsToShow = blogs.filter(b => b.user.username === user.username).sort((a, b) => b.likes - a.likes)
 
   return (
-    <Router>
+    <div>
+      <h2>blogs</h2>
+      <Notification message={notification.value} isError={notification.isError} />
       <div>
-        <h2>blogs</h2>
-        <Notification message={notification.value} isError={notification.isError} />
-        <div>
-          {user.name} logged-in
-          <button type="button" onClick={handleLogout}>log out</button>
-        </div>
-        <br />
-        <Switch>
-          <Route path="/users">
-            <Users />
-          </Route>
-          <Route path="/">
-            <Blogs blogs={blogsToShow} addBlog={addBlog} likeBlog={likeBlog} removeBlog={removeBlog} blogFormRef={blogFormRef} />
-          </Route>
-        </Switch>
+        {user.name} logged-in
+        <button type="button" onClick={handleLogout}>log out</button>
       </div>
-    </Router>
+      <br />
+      <Switch>
+        <Route path="/users/:id">
+          <User user={userFromMatch} />
+        </Route>
+        <Route path="/users">
+          <Users users={users} />
+        </Route>
+        <Route path="/">
+          <Blogs blogs={blogsToShow} addBlog={addBlog} likeBlog={likeBlog} removeBlog={removeBlog} blogFormRef={blogFormRef} />
+        </Route>
+      </Switch>
+    </div>
   )
 
-  /*<Router>
-      <div>
+  /*<div>
         <Link style={padding} to="/">home</Link>
         <Link style={padding} to="/notes">notes</Link>
         <Link style={padding} to="/users">users</Link>
-      </div>
-
-      <Switch>
-        <Route path="/notes">
-          <Notes />
-        </Route>
-        <Route path="/users">
-          <Users />
-        </Route>
-        <Route path="/">
-          <Home />
-        </Route>
-      </Switch>
-
-      <div>
-        <i>Note app, Department of Computer Science 2021</i>
-      </div>
-    </Router>*/
+      </div>*/
 
   /*{notes.map(note =>
       <li key={note.id}>
         <Link to={`/notes/${note.id}`}>{note.content}</Link>
       </li>
     )}*/
-
-  /*<Route path="/notes/:id">
-        <Note notes={notes} />
-      </Route>*/
-
-  /*import {
-        // ...
-        useParams
-      } from "react-router-dom"
-
-      const Note = ({ notes }) => {
-        const id = useParams().id
-        const note = notes.find(n => n.id === Number(id)) */
 }
 
 export default App

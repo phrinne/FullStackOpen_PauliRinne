@@ -1,7 +1,5 @@
 import blogService from '../services/blogs'
 
-//const orderAnecdotes = (anecdotes) => anecdotes.sort((a, b) => b.votes - a.votes)
-
 const blogReducer = (state = [], action) => {
   console.log('state now: ', state)
   console.log('action', action)
@@ -9,16 +7,13 @@ const blogReducer = (state = [], action) => {
   switch (action.type) {
   case 'INIT_BLOGS':
     return action.data
-    //return orderAnecdotes(action.data)
   case 'NEW_BLOG':
     return [...state, action.data]
-    //return orderAnecdotes([...state, action.data])
   case 'LIKE': {
     const id = action.data.id
     const changedBlog = action.data
     const updatedBlogs = state.map(b => b.id !== id ? b : changedBlog )
     return updatedBlogs
-    //return orderAnecdotes(updatedAnecdotes)
   }
   case 'REMOVE':
     return state.filter(b => b.id !== action.id)
