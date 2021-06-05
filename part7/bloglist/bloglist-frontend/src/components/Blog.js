@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React/*, { useState }*/ from 'react'
+import { Link } from 'react-router-dom'
 
-const Blog = ({ blog, handleLike, handleDelete }) => {
-  const [isExpanded, setIsExpanded] = useState(false)
+const Blog = ({ blog/*, handleLike, handleDelete*/ }) => {
+  //const [isExpanded, setIsExpanded] = useState(false)
 
   const blogStyle = {
     paddingTop: 10,
@@ -11,7 +12,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
     marginBottom: 5
   }
 
-  const addLike = () => {
+  /*const addLike = () => {
     handleLike(blog.id, {
       title: blog.title,
       author: blog.author,
@@ -43,15 +44,15 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
         </div>
       </>
     )
-  }
+  }*/
 
   return (
     <div className='blogitem' style={blogStyle}>
-      {blog.title} {blog.author}
-      <button onClick={() => setIsExpanded(!isExpanded)}>{isExpanded?'hide':'view'}</button>
-      {isExpanded && details()}
+      <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
     </div>
   )
 }
+//<button onClick={() => setIsExpanded(!isExpanded)}>{isExpanded?'hide':'view'}</button>
+//{isExpanded && details()}
 
 export default Blog

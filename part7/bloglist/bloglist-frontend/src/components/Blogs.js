@@ -3,7 +3,7 @@ import Blog from './Blog'
 import Togglable from './Togglable'
 import BlogForm from './BlogForm'
 
-const Blogs = ({ blogs, addBlog, likeBlog, removeBlog, blogFormRef }) => {
+const Blogs = ({ blogs, addBlog/*, likeBlog, removeBlog*/, blogFormRef }) => {
   return (
     <>
       <Togglable buttonLabel='new blog' ref={blogFormRef}>
@@ -11,9 +11,10 @@ const Blogs = ({ blogs, addBlog, likeBlog, removeBlog, blogFormRef }) => {
         <BlogForm createBlog={addBlog} />
       </Togglable>
       <br />
-      {blogs.map(b => <Blog key={b.id} blog={b} handleLike={likeBlog} handleDelete={removeBlog} />)}
+      {blogs.map(b => <Blog key={b.id} blog={b} />)}
     </>
   )
 }
+//handleLike={likeBlog} handleDelete={removeBlog}
 
 export default Blogs

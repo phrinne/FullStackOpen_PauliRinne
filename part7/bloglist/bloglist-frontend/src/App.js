@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, createBlog, addLike, deleteBlog } from './reducers/blogReducer'
+import { initializeBlogs, createBlog, addLike/*, deleteBlog*/ } from './reducers/blogReducer'
 import { setUser, logout } from './reducers/userReducer'
 import { initializeUsers } from './reducers/usersReducer'
 
@@ -9,6 +9,7 @@ import Notification from './components/Notification'
 import Users from './components/Users'
 import User from './components/User'
 import Blogs from './components/Blogs'
+import BlogView from './components/BlogView'
 
 import loginService from './services/login'
 
@@ -28,6 +29,8 @@ const App = () => {
 
   const userMatch = useRouteMatch('/users/:id')
   const userFromMatch = userMatch?users.find(u => u.id === userMatch.params.id):null
+  const blogMatch = useRouteMatch('/blogs/:id')
+  const blogFromMatch = blogMatch?blogs.find(b => b.id === blogMatch.params.id):null
 
   const notificationTime = 3
 
@@ -83,7 +86,7 @@ const App = () => {
     }
   }
 
-  const removeBlog = async (blogToDelete) => {
+  /*const removeBlog = async (blogToDelete) => {
     if(window.confirm(`Remove blog ${blogToDelete.title} by ${blogToDelete.author}?`)) {
       try {
         dispatch(deleteBlog(blogToDelete.id))
@@ -91,7 +94,7 @@ const App = () => {
         dispatch(setNotification('Blog remove failed', true, notificationTime))
       }
     }
-  }
+  }*/
 
   if (user === null) {
     return (
@@ -128,27 +131,19 @@ const App = () => {
         <Route path="/users/:id">
           <User user={userFromMatch} />
         </Route>
+        <Route path="/blogs/:id">
+          <BlogView blog={blogFromMatch} handleLike={likeBlog} />
+        </Route>
         <Route path="/users">
           <Users users={users} />
         </Route>
         <Route path="/">
-          <Blogs blogs={blogsToShow} addBlog={addBlog} likeBlog={likeBlog} removeBlog={removeBlog} blogFormRef={blogFormRef} />
+          <Blogs blogs={blogsToShow} addBlog={addBlog} blogFormRef={blogFormRef} />
         </Route>
       </Switch>
     </div>
   )
-
-  /*<div>
-        <Link style={padding} to="/">home</Link>
-        <Link style={padding} to="/notes">notes</Link>
-        <Link style={padding} to="/users">users</Link>
-      </div>*/
-
-  /*{notes.map(note =>
-      <li key={note.id}>
-        <Link to={`/notes/${note.id}`}>{note.content}</Link>
-      </li>
-    )}*/
 }
+//likeBlog={likeBlog} removeBlog={removeBlog}
 
 export default App
