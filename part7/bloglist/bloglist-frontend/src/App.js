@@ -4,11 +4,16 @@ import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs, createBlog, addLike, deleteBlog } from './reducers/blogReducer'
 import { setUser, logout } from './reducers/userReducer'
 
-import Blog from './components/Blog'
 import Notification from './components/Notification'
-import BlogForm from './components/BlogForm'
-import Togglable from './components/Togglable'
+import Users from './components/Users'
+import Blogs from './components/Blogs'
+
 import loginService from './services/login'
+
+import {
+  BrowserRouter as Router,
+  Switch, Route//, Link
+} from 'react-router-dom'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -101,24 +106,69 @@ const App = () => {
   const blogsToShow = blogs.filter(b => b.user.username === user.username).sort((a, b) => b.likes - a.likes)
 
   return (
-    <div>
-      <h2>blogs</h2>
-      <Notification message={notification.value} isError={notification.isError} />
+    <Router>
       <div>
-        {user.name} logged-in
-        <button type="button" onClick={handleLogout}>log out</button>
+        <h2>blogs</h2>
+        <Notification message={notification.value} isError={notification.isError} />
+        <div>
+          {user.name} logged-in
+          <button type="button" onClick={handleLogout}>log out</button>
+        </div>
+        <br />
+        <Switch>
+          <Route path="/users">
+            <Users />
+          </Route>
+          <Route path="/">
+            <Blogs blogs={blogsToShow} addBlog={addBlog} likeBlog={likeBlog} removeBlog={removeBlog} blogFormRef={blogFormRef} />
+          </Route>
+        </Switch>
       </div>
-      <br />
-
-      <Togglable buttonLabel='new blog' ref={blogFormRef}>
-        <h2>create new</h2>
-        <BlogForm createBlog={addBlog} />
-      </Togglable>
-      <br />
-
-      {blogsToShow.map(b => <Blog key={b.id} blog={b} handleLike={likeBlog} handleDelete={removeBlog} />)}
-    </div>
+    </Router>
   )
+
+  /*<Router>
+      <div>
+        <Link style={padding} to="/">home</Link>
+        <Link style={padding} to="/notes">notes</Link>
+        <Link style={padding} to="/users">users</Link>
+      </div>
+
+      <Switch>
+        <Route path="/notes">
+          <Notes />
+        </Route>
+        <Route path="/users">
+          <Users />
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+      </Switch>
+
+      <div>
+        <i>Note app, Department of Computer Science 2021</i>
+      </div>
+    </Router>*/
+
+  /*{notes.map(note =>
+      <li key={note.id}>
+        <Link to={`/notes/${note.id}`}>{note.content}</Link>
+      </li>
+    )}*/
+
+  /*<Route path="/notes/:id">
+        <Note notes={notes} />
+      </Route>*/
+
+  /*import {
+        // ...
+        useParams
+      } from "react-router-dom"
+
+      const Note = ({ notes }) => {
+        const id = useParams().id
+        const note = notes.find(n => n.id === Number(id)) */
 }
 
 export default App
