@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, createBlog, addLike/*, deleteBlog*/ } from './reducers/blogReducer'
+import { initializeBlogs, createBlog, addLike, addComment/*, deleteBlog*/ } from './reducers/blogReducer'
 import { setUser, logout } from './reducers/userReducer'
 import { initializeUsers } from './reducers/usersReducer'
 
@@ -86,6 +86,15 @@ const App = () => {
     }
   }
 
+  const commentBlog = async (id, comment) => {
+    try {
+      dispatch(addComment(id, comment))
+      dispatch(setNotification('Comment added', false, notificationTime))
+    } catch (exception) {
+      dispatch(setNotification('Blog comment failed', true, notificationTime))
+    }
+  }
+
   /*const removeBlog = async (blogToDelete) => {
     if(window.confirm(`Remove blog ${blogToDelete.title} by ${blogToDelete.author}?`)) {
       try {
@@ -135,7 +144,7 @@ const App = () => {
           <User user={userFromMatch} />
         </Route>
         <Route path="/blogs/:id">
-          <BlogView blog={blogFromMatch} handleLike={likeBlog} />
+          <BlogView blog={blogFromMatch} handleLike={likeBlog} handleComment={commentBlog} />
         </Route>
         <Route path="/users">
           <Users users={users} />

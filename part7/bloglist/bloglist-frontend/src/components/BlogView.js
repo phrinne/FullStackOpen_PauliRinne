@@ -1,6 +1,8 @@
 import React from 'react'
+import CommentForm from './CommentForm'
+import { v4 as uuidv4 } from 'uuid'
 
-const BlogView = ({ blog, handleLike/*, handleDelete*/ }) => {
+const BlogView = ({ blog, handleLike, handleComment/*, handleDelete*/ }) => {
 
   if (!blog) {
     return null
@@ -14,6 +16,10 @@ const BlogView = ({ blog, handleLike/*, handleDelete*/ }) => {
       likes: blog.likes+1,
       user: blog.user.id
     })
+  }
+
+  const addComment = (comment) => {
+    handleComment(blog.id, comment)
   }
 
   /*const deleteBlog = () => {
@@ -33,6 +39,11 @@ const BlogView = ({ blog, handleLike/*, handleDelete*/ }) => {
       <div>
         added by {blog.user.name}
       </div>
+      <h3>comments</h3>
+      <CommentForm createComment={addComment} />
+      <ul>
+        {blog.comments.map(c => <li key={uuidv4()}>{c}</li>)}
+      </ul>
     </>
   )
 }

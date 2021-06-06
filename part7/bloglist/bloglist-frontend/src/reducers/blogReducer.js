@@ -15,6 +15,12 @@ const blogReducer = (state = [], action) => {
     const updatedBlogs = state.map(b => b.id !== id ? b : changedBlog )
     return updatedBlogs
   }
+  case 'COMMENT': {
+    const id = action.data.id
+    const commentedBlog = action.data
+    const updatedBlogs = state.map(b => b.id !== id ? b : commentedBlog )
+    return updatedBlogs
+  }
   case 'REMOVE':
     return state.filter(b => b.id !== action.id)
   default:
@@ -58,6 +64,16 @@ export const deleteBlog = (id) => {
     dispatch({
       type: 'REMOVE',
       id
+    })
+  }
+}
+
+export const addComment = (id, comment) => {
+  return async dispatch => {
+    const commentedBlogFromBackend = await blogService.comment(id, comment)
+    dispatch({
+      type: 'COMMENT',
+      data: commentedBlogFromBackend
     })
   }
 }
