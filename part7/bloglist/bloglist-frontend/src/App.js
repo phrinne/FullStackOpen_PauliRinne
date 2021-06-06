@@ -10,10 +10,11 @@ import Users from './components/Users'
 import User from './components/User'
 import Blogs from './components/Blogs'
 import BlogView from './components/BlogView'
+import Navigation from './components/Navigation'
 
 import loginService from './services/login'
 
-import { Switch, Route, useRouteMatch, Link } from 'react-router-dom'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -126,17 +127,11 @@ const App = () => {
   }
 
   const blogsToShow = blogs.filter(b => b.user.username === user.username).sort((a, b) => b.likes - a.likes)
-  const padding = { padding: 5 }
 
   return (
     <div>
-      <div style={{ backgroundColor: 'lightgrey', padding: 5 }}>
-        <Link style={padding} to="/">blogs</Link>
-        <Link style={padding} to="/users">users</Link>
-        <span style={padding}>{user.name} logged-in</span>
-        <button style={padding} type="button" onClick={handleLogout}>log out</button>
-      </div>
-      <h2>blog app</h2>
+      <Navigation handleLogout={handleLogout} user={user} />
+      <h1>blog app</h1>
       <Notification message={notification.value} isError={notification.isError} />
       <br />
       <Switch>

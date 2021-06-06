@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { SmallButton } from '../styles/buttonStyles'
+import Input from '../styles/inputStyles'
 
 const CommentForm = ({ createComment }) => {
   const [newComment, setNewComment] = useState('')
@@ -13,8 +15,8 @@ const CommentForm = ({ createComment }) => {
 
   return (
     <form onSubmit={addComment}>
-      <input value={newComment} onChange={handleCommentChange} id='comment' />
-      <button id='create-comment-button' type="submit">add comment</button>
+      <Input value={newComment} onChange={handleCommentChange} id='comment' />
+      <SmallButton id='create-comment-button' type="submit">add comment</SmallButton>
     </form>
   )
 }

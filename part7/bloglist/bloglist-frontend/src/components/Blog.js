@@ -1,16 +1,16 @@
 import React/*, { useState }*/ from 'react'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+
+const StyledBlog = styled.div`
+  padding: 1rem;
+  border: 'solid';
+  border: 1px solid;
+  margin-bottom: 0.5rem;
+`
 
 const Blog = ({ blog/*, handleLike, handleDelete*/ }) => {
   //const [isExpanded, setIsExpanded] = useState(false)
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
 
   /*const addLike = () => {
     handleLike(blog.id, {
@@ -47,9 +47,9 @@ const Blog = ({ blog/*, handleLike, handleDelete*/ }) => {
   }*/
 
   return (
-    <div className='blogitem' style={blogStyle}>
+    <StyledBlog className='blogitem'>
       <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
-    </div>
+    </StyledBlog>
   )
 }
 //<button onClick={() => setIsExpanded(!isExpanded)}>{isExpanded?'hide':'view'}</button>

@@ -1,6 +1,7 @@
 import React from 'react'
 import CommentForm from './CommentForm'
 import { v4 as uuidv4 } from 'uuid'
+import { SmallButton } from '../styles/buttonStyles'
 
 const BlogView = ({ blog, handleLike, handleComment/*, handleDelete*/ }) => {
 
@@ -34,7 +35,7 @@ const BlogView = ({ blog, handleLike, handleComment/*, handleDelete*/ }) => {
       </div>
       <div className='blogLikes'>
         {blog.likes} likes
-        <button onClick={addLike}>like</button>
+        <SmallButton onClick={addLike}>like</SmallButton>
       </div>
       <div>
         added by {blog.user.name}
