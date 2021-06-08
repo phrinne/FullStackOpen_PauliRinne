@@ -151,7 +151,7 @@ const resolvers = {
     addBook: (root, args) => {
       const book = { ...args, id: uuid() }
       books = books.concat(book)
-      if(!authors.includes(args.author)) {
+      if(!authors.map(a => a.name).includes(args.author)) {
         authors = authors.concat({
           name: args.author,
           id: uuid()
