@@ -16,6 +16,8 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
   .then(() => console.log('connected to MongoDB'))
   .catch((error) => console.log('error connection to MongoDB:', error.message))
 
+mongoose.set('debug', true)
+
 const typeDefs = gql`
   type User {
     username: String!
@@ -77,9 +79,13 @@ const typeDefs = gql`
 `
 
 const resolvers = {
-  Author: {
-    bookCount: (root) => Book.find({ author: root.id }).countDocuments()
-  },
+  /*Author: {
+    bookCount: (root) => {
+      console.log('bookCount called')
+      return root.populate('books').books.length
+      //return Book.find({ author: root.id }).countDocuments()
+    }
+  },*/
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
@@ -123,6 +129,8 @@ const resolvers = {
         const book = new Book({ ...args, author })
         await book.save()
         pubsub.publish('BOOK_ADDED', { bookAdded: book })
+        author.bookCount = author.bookCount+1
+        await author.save()
         return book
       } catch (error) {
         throw new UserInputError(error.message, { invalidArgs: args })
