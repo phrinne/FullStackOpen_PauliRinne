@@ -1,15 +1,31 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
 import Recommend from './components/Recommend'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useLazyQuery } from '@apollo/client'
+import { ME } from './queries/queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
   const client = useApolloClient()
+
+  const [favGenre, setFavGenre] = useState(null)
+  const [getMe, meResult] = useLazyQuery(ME)
+
+  useEffect(() => {
+    if(meResult.data) {
+      setFavGenre(meResult.data.me.favoriteGenre)
+    }
+  }, [meResult])
+
+  const login = (token) => {
+    setToken(token)
+    localStorage.setItem('library-user-token', token)
+    getMe()
+  }
 
   const logout = () => {
     setToken(null)
@@ -30,9 +46,9 @@ const App = () => {
       </div>
       <Authors show={page === 'authors'} loggedIn={token !== null} />
       <Books show={page === 'books'} />
-      <NewBook show={page === 'add'} />
-      <Recommend show={page === 'recommend'} />
-      <Login show={page === 'login'} setToken={setToken} setPage={setPage} />
+      <NewBook show={page === 'add'} favGenre={favGenre} />
+      <Recommend show={page === 'recommend'} favGenre={favGenre} />
+      <Login show={page === 'login'} handleLogin={login} setPage={setPage} />
     </div>
   )
 }
