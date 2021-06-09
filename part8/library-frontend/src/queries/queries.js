@@ -16,7 +16,9 @@ export const ALL_BOOKS = gql`
     allBooks {
       title
       published
-      author
+      author {
+        name
+      }
       id
     }
   }
@@ -49,15 +51,3 @@ export const EDIT_BIRTHYEAR = gql`
     }
   }
 `
-
-/*export const FIND_PERSON = gql`
-  query findPersonByName($nameToSearch: String!) {
-    // ...
-  }
-`
-
-export const CREATE_PERSON = gql`
-  mutation createPerson($name: String!, $street: String!, $city: String!, $phone: String) {
-    // ...
-  }
-`*/
