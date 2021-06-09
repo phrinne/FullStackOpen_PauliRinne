@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
 import { EDIT_BIRTHYEAR } from '../queries/queries'
 
-const BirthYearForm = ( {authorNames} ) => {
+const BirthYearForm = ({ authorNames }) => {
   const [name, setName] = useState(authorNames[0])
   const [year, setYear] = useState('')
   const [ changeBirthYear, result ] = useMutation(EDIT_BIRTHYEAR)

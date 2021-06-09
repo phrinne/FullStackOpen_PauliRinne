@@ -3,10 +3,10 @@ import { useQuery } from '@apollo/client';
 import { ALL_AUTHORS } from '../queries/queries'
 import BirthYearForm from './BirthYearForm'
 
-const Authors = (props) => {
+const Authors = ({ show, loggedIn }) => {
   const result = useQuery(ALL_AUTHORS)
   
-  if (!props.show) {
+  if (!show) {
     return null
   }
   
@@ -40,7 +40,7 @@ const Authors = (props) => {
           )}
         </tbody>
       </table>
-      <BirthYearForm authorNames={authors.map(a => a.name)} />
+      {loggedIn && <BirthYearForm authorNames={authors.map(a => a.name)} />}
     </div>
   )
 }
