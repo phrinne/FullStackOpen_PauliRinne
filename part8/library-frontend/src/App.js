@@ -4,8 +4,8 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
 import Recommend from './components/Recommend'
-import { useApolloClient, useLazyQuery } from '@apollo/client'
-import { ME } from './queries/queries'
+import { useApolloClient, useLazyQuery, useSubscription } from '@apollo/client'
+import { ME, BOOK_ADDED } from './queries/queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -14,6 +14,13 @@ const App = () => {
 
   const [favGenre, setFavGenre] = useState(null)
   const [getMe, meResult] = useLazyQuery(ME)
+  
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData)
+      window.alert(`Added: ${subscriptionData.data.bookAdded.title}`)
+    }
+  })
 
   useEffect(() => {
     if(meResult.data) {
