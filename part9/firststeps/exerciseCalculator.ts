@@ -1,12 +1,3 @@
-//If you would call the function with parameters [3, 0, 2, 4.5, 0, 3, 1] and 2 it could return
-/*{ periodLength: 7,
-  trainingDays: 5,
-  success: false,
-  rating: 2,
-  ratingDescription: 'not too bad but could be better',
-  target: 2,
-  average: 1.9285714285714286 }*/
-
 interface Result {
   periodLength: number;
   trainingDays: number;
@@ -26,11 +17,11 @@ const calculateExercises = (hours:Array<number>, target: number): Result => {
   let ratingDescription = 'bad';
   if(success) {
     rating = 2;
-    ratingDescription = 'you did it'
+    ratingDescription = 'you did it';
   }
   if(average >= 2*target) {
     rating = 3;
-    ratingDescription = 'super'
+    ratingDescription = 'super';
   }
 
   return {
@@ -41,8 +32,8 @@ const calculateExercises = (hours:Array<number>, target: number): Result => {
     ratingDescription,
     target,
     average,
-  }
-}
+  };
+};
 
 //const diary = [3, 0, 2, 4.5, 0, 3, 1];
 //const targetHours = 2;
@@ -56,9 +47,10 @@ try {
   for(let i = 3; i < process.argv.length; i++) {
     const entry = Number(process.argv[i]);
     if (isNaN(entry)) throw new Error('All entries are not numbers');
-    diary.push(entry)
+    diary.push(entry);
   }
   console.log(calculateExercises(diary, targetHours));
 } catch (e) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   console.log(e.message);
 }
