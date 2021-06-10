@@ -27,3 +27,5 @@ try {
 } catch (e) {
   console.log(e.message);
 }
+
+export default calculateBmi;
