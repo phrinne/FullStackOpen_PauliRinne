@@ -44,6 +44,21 @@ const calculateExercises = (hours:Array<number>, target: number): Result => {
   }
 }
 
-const diary = [3, 0, 2, 4.5, 0, 3, 1];
-const targetHours = 2;
-console.log(calculateExercises(diary, targetHours));
+//const diary = [3, 0, 2, 4.5, 0, 3, 1];
+//const targetHours = 2;
+//console.log(calculateExercises(diary, targetHours));
+
+try {
+  if (process.argv.length < 4) throw new Error('Not enough arguments');
+  const targetHours = Number(process.argv[2]);
+  if (isNaN(targetHours)) throw new Error('Target value is not a number');
+  const diary = [];
+  for(let i = 3; i < process.argv.length; i++) {
+    const entry = Number(process.argv[i]);
+    if (isNaN(entry)) throw new Error('All entries are not numbers');
+    diary.push(entry)
+  }
+  console.log(calculateExercises(diary, targetHours));
+} catch (e) {
+  console.log(e.message);
+}
