@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface TotalProps {
-  courseParts: Array<{name: string, exerciseCount: number}>;
+  courseParts: Array<{exerciseCount: number}>;
 }
 
 const Total = ({ courseParts }: TotalProps) => (
