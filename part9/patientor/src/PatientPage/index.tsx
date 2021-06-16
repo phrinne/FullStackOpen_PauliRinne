@@ -33,6 +33,14 @@ const PatientPage = () => {
     <Header as="h2">{patient.name}<i className={`${iconName} icon`}></i></Header>
     <div>ssn: {patient.ssn}</div>
     <div>occupation: {patient.occupation}</div>
+    <Header as="h3">Entries</Header>
+    {patient.entries.map(e => 
+      <div key={e.id}>{e.date} <i>{e.description}</i>
+        <ul>
+          {e.diagnosisCodes?.map(d => <li key={d}>{d}</li>)}
+        </ul>
+      </div>
+    )}
     </>
   );
 };
