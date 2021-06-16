@@ -8,7 +8,7 @@ import { Header} from "semantic-ui-react";
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const patient: Patient = patients[id];
   
   React.useEffect(() => {
@@ -37,7 +37,7 @@ const PatientPage = () => {
     {patient.entries.map(e => 
       <div key={e.id}>{e.date} <i>{e.description}</i>
         <ul>
-          {e.diagnosisCodes?.map(d => <li key={d}>{d}</li>)}
+          {e.diagnosisCodes?.map(d => <li key={d}>{d} {diagnoses[d].name}</li>)}
         </ul>
       </div>
     )}
