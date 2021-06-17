@@ -2,22 +2,23 @@ import React from "react";
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { TextField } from "../AddPatientModal/FormField";
-import { HospitalEntry } from "../types";
+import { OccupationalHealthcareEntry } from "../types";
 import { useStateValue } from "../state";
 import { DiagnosisSelection } from "../AddPatientModal/FormField";
 
-type HospitalValuesMod = Omit<HospitalEntry, "id" | "type" | "discharge">;
-export interface EntryForm1Values extends HospitalValuesMod {
-  dischargeDate: string;
-  dischargeCriteria: string;
+type OccupationalValuesMod = Omit<OccupationalHealthcareEntry, "id" | "type" | "sickLeave">;
+export interface EntryForm2Values extends OccupationalValuesMod {
+  sickLeaveStart: string;
+  sickLeaveEnd: string;
+  employerName: string;
 }
 
 interface Props {
-  onSubmit: (values: EntryForm1Values) => void;
+  onSubmit: (values: EntryForm2Values) => void;
   onCancel: () => void;
 }
 
-export const AddEntryForm1 = ({ onSubmit, onCancel } : Props ) => {
+export const AddEntryForm2 = ({ onSubmit, onCancel } : Props ) => {
   const [{ diagnoses }] = useStateValue();
 
   return (
@@ -27,8 +28,9 @@ export const AddEntryForm1 = ({ onSubmit, onCancel } : Props ) => {
         specialist: "",
         diagnosisCodes: [],
         description: "",
-        dischargeDate: "",
-        dischargeCriteria: ""
+        employerName: "",
+        sickLeaveStart: "",
+        sickLeaveEnd: "",
       }}
       onSubmit={onSubmit}
       validate={values => {
@@ -43,11 +45,8 @@ export const AddEntryForm1 = ({ onSubmit, onCancel } : Props ) => {
         if (!values.description) {
           errors.description = requiredError;
         }
-        if (!values.dischargeDate) {
-          errors.dischargeDate = requiredError;
-        }
-        if (!values.dischargeCriteria) {
-          errors.dischargeCriteria = requiredError;
+        if (!values.employerName) {
+          errors.employerName = requiredError;
         }
         return errors;
       }}
@@ -79,15 +78,21 @@ export const AddEntryForm1 = ({ onSubmit, onCancel } : Props ) => {
               component={TextField}
             />
             <Field
-              label="Discharge date"
-              placeholder="YYYY-MM-DD"
-              name="dischargeDate"
+              label="Emplyer name"
+              placeholder="Employer name"
+              name="employerName"
               component={TextField}
             />
             <Field
-              label="Discharge criteria"
-              placeholder="Discharge criteria"
-              name="dischargeCriteria"
+              label="Sick leave start"
+              placeholder="YYYY-MM-DD"
+              name="sickLeaveStart"
+              component={TextField}
+            />
+            <Field
+              label="Sick leave end"
+              placeholder="YYY-MM-DD"
+              name="sickLeaveEnd"
               component={TextField}
             />
             
@@ -115,4 +120,4 @@ export const AddEntryForm1 = ({ onSubmit, onCancel } : Props ) => {
   );
 };
 
-export default AddEntryForm1;
+export default AddEntryForm2;

@@ -90,17 +90,22 @@ const parseSickleave = (sickLeave: unknown) => {
     return null;
   }
   if (!(sickLeave instanceof Object)) {
-    throw new Error('Incorrect or missing sick leave: ' + sickLeave);
+    throw new Error('Sick leave is not an object');
   }
   return parseSickleaveCotents(sickLeave as SickleaveFields);
 };
-const parseSickleaveCotents = ({ startDate, endDate }: SickleaveFields): { startDate: string, endDate: string } => {
+const parseSickleaveCotents = ({ startDate, endDate }: SickleaveFields): { startDate: string, endDate: string } | null => {
   if(!startDate || !endDate || !isString(startDate) || !isString(endDate)) {
-    throw new Error('Incorrect or missing sick leave: ' + startDate + endDate);
+    //throw new Error('Incorrect or missing sick leave: ' + startDate + endDate);
+    return null;
+  }
+  if(!startDate.length || !endDate.length) {
+    return null;
   }
   return { startDate, endDate };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isHealthcheckType = (param: any): param is HealthCheckRating => {
   return Object.values(HealthCheckRating).includes(param);
 };

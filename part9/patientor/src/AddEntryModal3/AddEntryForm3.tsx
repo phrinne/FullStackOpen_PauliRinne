@@ -2,22 +2,18 @@ import React from "react";
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { TextField } from "../AddPatientModal/FormField";
-import { HospitalEntry } from "../types";
+import { HealthCheckEntry } from "../types";
 import { useStateValue } from "../state";
-import { DiagnosisSelection } from "../AddPatientModal/FormField";
+import { DiagnosisSelection, NumberField } from "../AddPatientModal/FormField";
 
-type HospitalValuesMod = Omit<HospitalEntry, "id" | "type" | "discharge">;
-export interface EntryForm1Values extends HospitalValuesMod {
-  dischargeDate: string;
-  dischargeCriteria: string;
-}
+export type EntryForm3Values = Omit<HealthCheckEntry, "id" | "type" >;
 
 interface Props {
-  onSubmit: (values: EntryForm1Values) => void;
+  onSubmit: (values: EntryForm3Values) => void;
   onCancel: () => void;
 }
 
-export const AddEntryForm1 = ({ onSubmit, onCancel } : Props ) => {
+export const AddEntryForm3 = ({ onSubmit, onCancel } : Props ) => {
   const [{ diagnoses }] = useStateValue();
 
   return (
@@ -27,8 +23,7 @@ export const AddEntryForm1 = ({ onSubmit, onCancel } : Props ) => {
         specialist: "",
         diagnosisCodes: [],
         description: "",
-        dischargeDate: "",
-        dischargeCriteria: ""
+        healthCheckRating: 0
       }}
       onSubmit={onSubmit}
       validate={values => {
@@ -42,12 +37,6 @@ export const AddEntryForm1 = ({ onSubmit, onCancel } : Props ) => {
         }
         if (!values.description) {
           errors.description = requiredError;
-        }
-        if (!values.dischargeDate) {
-          errors.dischargeDate = requiredError;
-        }
-        if (!values.dischargeCriteria) {
-          errors.dischargeCriteria = requiredError;
         }
         return errors;
       }}
@@ -79,16 +68,11 @@ export const AddEntryForm1 = ({ onSubmit, onCancel } : Props ) => {
               component={TextField}
             />
             <Field
-              label="Discharge date"
-              placeholder="YYYY-MM-DD"
-              name="dischargeDate"
-              component={TextField}
-            />
-            <Field
-              label="Discharge criteria"
-              placeholder="Discharge criteria"
-              name="dischargeCriteria"
-              component={TextField}
+              label="healthCheckRating"
+              name="healthCheckRating"
+              component={NumberField}
+              min={0}
+              max={3}
             />
             
             <Grid>
@@ -115,4 +99,4 @@ export const AddEntryForm1 = ({ onSubmit, onCancel } : Props ) => {
   );
 };
 
-export default AddEntryForm1;
+export default AddEntryForm3;
