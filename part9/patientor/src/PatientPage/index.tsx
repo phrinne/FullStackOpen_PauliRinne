@@ -4,7 +4,10 @@ import { useParams } from "react-router-dom";
 import { useStateValue, updatePatient } from "../state";
 import { Gender, Patient, Entry, HospitalEntry, OccupationalHealthcareEntry, HealthCheckEntry, HealthCheckRating } from "../types";
 import { apiBaseUrl } from "../constants";
-import { Header, Card } from "semantic-ui-react";
+import { Header, Card, Button } from "semantic-ui-react";
+
+import AddEntryModal1 from "../AddEntryModal1";
+import { EntryForm1Values } from '../AddEntryModal1/AddEntryForm1';
 
 const assertNever = (value: never): never => {
   throw new Error(
@@ -13,13 +16,6 @@ const assertNever = (value: never): never => {
 };
 
 const style = {padding: '1rem', width: 'auto'};
-  /*return (
-    <div key={entry.id}>{entry.date} <i>{entry.description}</i>
-    <ul>
-      {entry.diagnosisCodes?.map(d => <li key={d}>{d} {diagnoses[d].name}</li>)}
-    </ul>
-  </div>
-  );*/
 
 const HospitalEntryDetails = ({ entry }: {entry: HospitalEntry }) => {
   return (
@@ -74,6 +70,11 @@ const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
   const [{ patients }, dispatch] = useStateValue();
   const patient: Patient = patients[id];
+
+  const [modal1Open, setModal1Open] = React.useState<boolean>(false);
+  const [/*modal2Open*/, setModal2Open] = React.useState<boolean>(false);
+  const [/*modal3Open*/, setModal3Open] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | undefined>();
   
   React.useEffect(() => {
     const fetchPatient = async () => {
@@ -87,7 +88,32 @@ const PatientPage = () => {
     if(!patient || !patient.ssn) void fetchPatient();
   }, []);
 
+  const openModal1 = (): void => setModal1Open(true);
+  const closeModal1 = (): void => {
+    setModal1Open(false);
+    setError(undefined);
+  };
+
   if(!patient) return null;
+
+  const submitNewEntry1 = async (values: EntryForm1Values) => {
+    try {
+      const adjustedValues = {
+        ...values, 
+        type: "Hospital",
+        discharge: {
+          date: values.dischargeDate,
+          criteria: values.dischargeCriteria
+        }
+      };
+      const { data: returnedPatient } = await axios.post<Patient>(`${apiBaseUrl}/patients/${patient.id}/entries`, adjustedValues );
+      dispatch(updatePatient(returnedPatient));
+      closeModal1();
+    } catch (e) {
+      console.error(e.response?.data || 'Unknown Error');
+      setError(e.response?.data || 'Unknown error');
+    }
+  };
 
   let iconName = patient.gender === Gender.Male?'mars':'venus';
   if(patient.gender === Gender.Other) iconName = 'genderless';
@@ -98,9 +124,20 @@ const PatientPage = () => {
     <div>ssn: {patient.ssn}</div>
     <div>occupation: {patient.occupation}</div>
     <Header as="h3">Entries</Header>
+
+    <Button onClick={openModal1}>Hospital Entry</Button>
+    <Button onClick={() => setModal2Open(true)}>Occupational Entry</Button>
+    <Button onClick={() => setModal3Open(true)}>Health Check Entry</Button>
+    
     {patient.entries.map(e => <EntryDetails key={e.id} entry={e} />)}
+
+    <AddEntryModal1 modalOpen={modal1Open} onSubmit={submitNewEntry1} error={error} onClose={closeModal1} />
     </>
   );
 };
 
 export default PatientPage;
+
+/*
+    <AddPatientModal modalOpen={modal2Open} onSubmit={submitNewEntry2} error={error2} onClose={() => setModal2Open(false)} />
+    <AddPatientModal modalOpen={modal3Open} onSubmit={submitNewEntry3} error={error3} onClose={() => setModal3Open(false)} />*/
