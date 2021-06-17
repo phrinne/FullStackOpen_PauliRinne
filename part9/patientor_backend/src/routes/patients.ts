@@ -1,7 +1,7 @@
 import express from 'express';
 import patientService from '../services/patientService';
-import { PatientEntry } from '../types';
-import toPatientEntry from '../utils';
+import { PatientEntry, NewEntry } from '../types';
+import toPatientEntry, { toNewEntry } from '../utils';
 
 const router = express.Router();
 
@@ -24,6 +24,22 @@ router.post('/', (req, res) => {
 
     const newPatient = patientService.addPatient(patient);
     res.json(newPatient);
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+});
+
+//our backend should support all those types and check that at least all required fields are given for each type
+router.post('/:id/entries', (req, res) => {
+  try {
+    const patient = patientService.findById(req.params.id);
+    if (!patient) {
+      res.sendStatus(404);
+      return;
+    }
+    const entry: NewEntry = toNewEntry(req.body);
+    const modifiedPatient = patientService.addEntry(patient, entry);
+    res.json(modifiedPatient);
   } catch (e) {
     res.status(400).send(e.message);
   }

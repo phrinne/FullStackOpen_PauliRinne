@@ -12,6 +12,7 @@ interface BaseEntry {
   specialist: string;
   diagnosisCodes?: Array<Diagnosis['code']>;
 }
+export type BaseEntryWithoutId = Omit<BaseEntry, 'id'>;
 
 interface HospitalEntry extends BaseEntry {
   type: "Hospital";
@@ -36,6 +37,8 @@ interface HealthCheckEntry extends BaseEntry {
 }
 
 export type Entry = HospitalEntry | OccupationalHealthcareEntry | HealthCheckEntry;
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+export type NewEntry = UnionOmit<Entry, 'id'>;
 
 export interface Diagnosis {
   code: string;
@@ -55,7 +58,7 @@ export interface Patient {
 
 export type PatientEntry = Omit<Patient, 'id'>;
 
-export type NonSensitivePatient = Omit<Patient, 'ssn'>;
+export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 
 export enum Gender {
   Male = 'male',
